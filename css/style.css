@@ -1,0 +1,534 @@
+/* =======================
+   Tema Sailor Moon 🌙✨
+   ======================= */
+
+/* Paleta base */
+:root{
+  --rosa: #ff7ad1;
+  --celeste: #7ad7ff;
+  --amarillo-luna: #ffe066;
+  --lila-oscuro: #2a2159;
+  --azul-espacio: #0f1232;
+  --texto-claro: #ffffff;
+  --borde-suave: rgba(255,255,255,0.18);
+  --brillo: 0 10px 40px rgba(255,122,209,.28);
+}
+
+/* ====== Base ====== */
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+
+  /* Cielo nocturno con brillos suaves y tonos Sailor */
+  background:
+    radial-gradient(1200px 600px at 10% -10%, rgba(255,255,255,0.06), transparent 60%),
+    radial-gradient(1000px 600px at 110% 10%, rgba(255,122,209,0.08), transparent 60%),
+    linear-gradient(160deg, var(--azul-espacio), var(--lila-oscuro));
+
+  color: var(--texto-claro);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  text-align: center;
+  padding-top: 64px; /* espacio superior (para la luna si la agregas) */
+}
+
+h1 { margin: 0 0 8px; }
+p  { margin: 0 0 12px; }
+
+p {
+  font-size: 1.2rem;
+  color: rgba(255,255,255,0.95);
+  max-width: 600px;
+}
+
+/* ====== Título y subtítulo ====== */
+.titulo {
+  font-size: clamp(28px, 6vw, 60px);
+  font-weight: 800;
+  line-height: 1.1;
+  margin: 0 0 10px;
+  background: linear-gradient(90deg, var(--rosa), var(--celeste));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 0 0 rgba(0,0,0,0);
+}
+
+.subtitulo {
+  margin: 8px 0 24px;
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.9);
+}
+
+/* ====== Luna creciente decorativa (opcional) ======
+   En el HTML: <div class="luna" aria-hidden="true"></div> debajo del h1 */
+.luna{
+  position: absolute;
+  top: 20px;
+  right: 24px;
+  width: 80px; height: 80px;
+  background: var(--amarillo-luna);
+  border-radius: 50%;
+  box-shadow: 0 0 18px rgba(255,224,102,0.6), 0 0 40px rgba(255,224,102,0.25);
+}
+.luna::after{
+  content: "";
+  position: absolute;
+  width: 80px; height: 80px;
+  right: -14px; top: 6px;
+  background: linear-gradient(160deg, var(--lila-oscuro), var(--azul-espacio));
+  border-radius: 50%;
+}
+
+/* ====== Botón Sorpresa ====== */
+#btnSorpresa {
+  margin-top: 18px;
+  padding: 12px 18px;
+  border: 1px solid var(--borde-suave);
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  background: linear-gradient(90deg, var(--rosa), var(--celeste));
+  color: #0d0f1a;
+  box-shadow: var(--brillo);
+  transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+}
+#btnSorpresa:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+  box-shadow: 0 12px 36px rgba(127, 196, 255, .28);
+}
+
+/* ====== Modal ====== */
+.overlay {
+  position: fixed; inset: 0;
+  display: none; place-items: center;
+  background: rgba(10, 10, 24, .55);
+  backdrop-filter: blur(3px);
+  padding: 16px;
+}
+.overlay.abierto { display: grid; }
+
+.modal {
+  width: min(620px, 96%);
+  background: rgba(12, 14, 40, 0.85);            /* glass oscuro */
+  color: var(--texto-claro);
+  border-radius: 16px;
+  padding: 22px;
+  text-align: left;
+  border: 1px solid var(--borde-suave);
+  box-shadow: 0 20px 60px rgba(0,0,0,.35), var(--brillo);
+  animation: aparecer .2s ease;
+}
+.modal h2 {
+  margin: 6px 0 10px;
+  background: linear-gradient(90deg, var(--rosa), var(--celeste));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.modal p { line-height: 1.65; color: rgba(231,233,255,.95); }
+
+.cerrar {
+  margin-top: 18px;
+  padding: 10px 14px;
+  background: #f3f3f3;
+  color: #222;
+  border: 0; border-radius: 10px; cursor: pointer;
+}
+
+/* ====== Galería ====== */
+.galeria {
+  width: min(920px, 92%);
+  margin: 26px auto 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.galeria img {
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  border-radius: 14px;
+  border: 1px solid var(--borde-suave);
+  box-shadow: 0 6px 18px rgba(0,0,0,.28);
+}
+
+/* Capa de estrellas de fondo */
+#stars{
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .8; /* baja/ sube brillo global si quieres */
+}
+
+/* Asegura que lo demás quede encima */
+body > * { position: relative; z-index: 1; }
+.luna { z-index: 2; } /* la lunita encima de todo */
+
+@media (min-width: 780px) {
+  .galeria { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* ====== Animaciones ====== */
+@keyframes aparecer {
+  from { transform: translateY(8px); opacity: 0; }
+  to   { transform: translateY(0);   opacity: 1; }
+}
+
+/* Pétalos: suben con vaivén y se desvanecen */
+@keyframes sakura {
+  0%   { transform: translate(0,   0)      rotate(0deg);   opacity: 0.95; }
+  50%  { transform: translate(15px, -55vh) rotate(15deg);  opacity: 0.9;  }
+  100% { transform: translate(-10px,-110vh) rotate(-15deg); opacity: 0;    }
+}
+
+/* ===== Carta para María ===== */
+.carta{
+  width: min(900px, 92%);
+  margin: 36px auto 8px;
+  background: rgba(12, 14, 40, 0.6);
+  border: 1px solid var(--borde-suave);
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 14px 40px rgba(0,0,0,.28);
+  text-align: left;
+}
+.carta h2{
+  margin: 0 0 10px;
+  font-size: clamp(20px, 4.2vw, 28px);
+  background: linear-gradient(90deg, var(--rosa), var(--celeste));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.carta-contenido{
+  color: rgba(231,233,255,.95);
+  line-height: 1.75;
+  font-size: clamp(14px, 2.5vw, 18px);
+}
+
+/* efecto cursor para el tipeo */
+.carta-contenido .cursor{
+  display:inline-block;
+  width: 10px;
+  height: 1.1em;
+  background: currentColor;
+  margin-left: 2px;
+  animation: parpadeo .9s steps(1) infinite;
+  vertical-align: -2px;
+}
+@keyframes parpadeo{
+  0%, 50% { opacity: 1; }
+  50.01%, 100% { opacity: 0; }
+}
+
+/* Sección final */
+.final {
+  margin: 60px auto;
+  text-align: center;
+}
+.final h2 {
+  font-size: clamp(20px, 4.5vw, 28px);
+  margin-bottom: 16px;
+  background: linear-gradient(90deg, var(--rosa), var(--celeste));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Video dentro del modal */
+.video-contenedor {
+  position: relative;
+  padding-top: 56.25%; /* 16:9 */
+}
+.video-contenedor video,
+.video-contenedor iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+}
+/* ===== 10 cosas que amo de ti ===== */
+.cosas {
+  width: min(960px, 92%);
+  margin: 50px auto;
+  text-align: center;
+}
+.cosas h2 {
+  font-size: clamp(22px, 5vw, 30px);
+  margin-bottom: 24px;
+  background: linear-gradient(90deg, var(--rosa), var(--celeste));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.cosas-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+.cosa {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid var(--borde-suave);
+  border-radius: 14px;
+  padding: 14px 18px;
+  color: rgba(231,233,255,.95);
+  font-size: clamp(14px, 2.5vw, 18px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.cosa:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.35), 0 0 16px rgba(255,224,102,.25);
+}
+@media (min-width: 700px) {
+  .cosas-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+
+/* ===== Nuestros momentos favoritos ===== */
+.momentos{
+  width: min(1000px, 92%);
+  margin: 50px auto;
+  text-align: center;
+}
+.momentos h2{
+  font-size: clamp(22px, 5vw, 30px);
+  margin-bottom: 18px;
+  background: linear-gradient(90deg, var(--rosa), var(--celeste));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Grid tipo collage */
+.momentos-grid{
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+@media (min-width: 720px){
+  .momentos-grid{ grid-template-columns: repeat(3, 1fr); }
+}
+
+/* Tarjeta de momento */
+.momento{
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--borde-suave);
+  box-shadow: 0 8px 22px rgba(0,0,0,.28);
+  cursor: default;
+  isolation: isolate;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.momento img{
+  display:block; width:100%; height:100%;
+  aspect-ratio: 4/5; /* formato agradable; cambia si quieres */
+  object-fit: cover;
+  transition: transform .35s ease;
+}
+
+/* Overlay de frase con degradado */
+.momento::after{
+  content:"";
+  position:absolute; inset:0;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 55%, rgba(10,10,24,.85) 100%);
+  opacity:.9; pointer-events:none;
+}
+
+.momento figcaption{
+  position: absolute; left: 12px; right: 12px; bottom: 12px;
+  color: rgba(255,255,255,.95);
+  font-size: clamp(13px, 2.3vw, 16px);
+  line-height: 1.5;
+  text-align: left;
+  z-index: 2;
+  text-shadow: 0 2px 10px rgba(0,0,0,.5);
+}
+
+/* toque Sailor: estrellita en esquina */
+.momento::before{
+  content: "✦";
+  position: absolute; top: 10px; right: 12px; z-index: 2;
+  font-size: 18px; color: var(--celeste);
+  text-shadow: 0 0 8px rgba(122,215,255,.8);
+  opacity: .85;
+}
+
+/* Hover sutil */
+.momento:hover{
+  transform: translateY(-3px);
+  box-shadow: 0 14px 32px rgba(0,0,0,.38), 0 0 22px rgba(255,224,102,.2);
+}
+.momento:hover img{ transform: scale(1.04); }
+
+/* Una tarjeta destacada (más grande) para romper ritmo */
+.momento.destacado img{ aspect-ratio: 16/10; }
+@media (min-width: 720px){
+  .momento.destacado{ grid-column: span 2; }
+}
+
+
+
+/* ===== Poema (limpio) ===== */
+.poema{
+  position: relative;
+  width: min(900px, 92%);
+  margin: 48px auto;
+  padding: 24px 28px;
+  text-align: center;
+
+  /* look acorde al tema */
+  background: rgba(12, 14, 40, 0.60);
+  border: 1px solid var(--borde-suave);
+  border-radius: 18px;
+  box-shadow: 0 14px 40px rgba(0,0,0,.28);
+
+  /* importantísimo para que NO se recorte el texto */
+  overflow: visible;
+  min-height: auto;
+
+  /* sobre las estrellas/pétalos */
+  z-index: 1;
+}
+
+.poema h2{
+  margin: 0 0 12px;
+  font-size: clamp(20px, 4.2vw, 28px);
+  background: linear-gradient(90deg, var(--rosa), var(--celeste));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.poema-contenido{
+  position: relative;
+  z-index: 1;
+  color: rgba(231,233,255,.95);
+  line-height: 1.85;
+  font-size: clamp(14px, 2.5vw, 18px);
+}
+
+/* Si usas la Dancing Script solo para el poema: */
+.poema-contenido p{
+  margin: 0;
+  font-family: 'Dancing Script', cursive; /* si no la tienes, usa Poppins y listo */
+  white-space: normal;       /* <- evita rarezas */
+  word-break: break-word;    /* por si hay líneas largas */
+}
+
+/* Anula cualquier rastro de gatos u otros pseudo-elementos previos */
+.poema::before,
+.poema::after{
+  content: none !important;
+  display: none !important;
+}
+
+
+/* Puerta de sonido (toast) */
+.audio-gate{
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  background: rgba(12,14,40,.85);
+  border: 1px solid var(--borde-suave);
+  color: #fff;
+  padding: 10px 12px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+  z-index: 9999;
+  display: flex; gap: 10px; align-items: center;
+}
+.audio-gate.hidden{ display: none; }
+
+#audioGate #enableSound{
+  background: linear-gradient(90deg, var(--rosa), var(--celeste));
+  color: #0d0f1a; font-weight: 700;
+  border: 0; border-radius: 10px;
+  padding: 8px 12px; cursor: pointer;
+}
+
+
+/* =========================
+   RESPONSIVE ENHANCEMENTS
+   ========================= */
+
+/* Respetar “reducir movimiento” en SO */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+
+/* Asegurar safe-areas (iPhone con notch) */
+body { padding-top: calc(64px + env(safe-area-inset-top, 0)); }
+.final { padding-bottom: env(safe-area-inset-bottom, 0); }
+
+/* --- Celulares pequeños (<= 360px) --- */
+@media (max-width: 360px) {
+  .titulo { font-size: clamp(24px, 8vw, 40px); }
+  .subtitulo { font-size: 0.95rem; }
+  .luna { width: 60px; height: 60px; top: 14px; right: 14px; }
+  .galeria { gap: 8px; }
+  .carta, .poema, .cosas, .momentos { padding: 16px; border-radius: 14px; }
+  .cosas-grid .cosa { padding: 12px 14px; }
+  .acciones { gap: 8px; }
+  #btnMusica, #btnSorpresa { padding: 10px 14px; border-radius: 10px; }
+  .video-contenedor { border-radius: 10px; }
+}
+
+/* --- Celulares comunes (<= 480px) --- */
+@media (max-width: 480px) {
+  .galeria { grid-template-columns: 1fr 1fr; }
+  .momentos-grid { grid-template-columns: 1fr; }
+  .momento img { aspect-ratio: 4/5; }
+  .momento.destacado img { aspect-ratio: 4/5; }
+  .poema-contenido { font-size: 1rem; line-height: 1.8; }
+  .carta-contenido { font-size: 1rem; line-height: 1.8; }
+  .cosas-grid { grid-template-columns: 1fr; }
+}
+
+/* --- Tablets (>= 700px) --- */
+@media (min-width: 700px) {
+  .cosas-grid { grid-template-columns: 1fr 1fr; }
+  .momentos-grid { grid-template-columns: repeat(3, 1fr); }
+  .momento.destacado { grid-column: span 2; }
+  .galeria { grid-template-columns: repeat(4, 1fr); }
+  .poema, .carta { padding: 28px 32px; }
+}
+
+/* --- Laptops (>= 1024px) --- */
+@media (min-width: 1024px) {
+  .poema, .carta { width: min(980px, 86%); }
+  .cosas { width: min(1100px, 90%); }
+  .momentos { width: min(1100px, 90%); }
+}
+
+/* --- Modales: asegurar que el video se vea bien en móviles --- */
+@media (max-width: 600px) {
+  .modal { padding: 16px; border-radius: 12px; }
+  .video-contenedor { padding-top: 56.25%; } /* 16:9 */
+}
+
+/* --- Botonera / acciones apiladas en móvil --- */
+@media (max-width: 520px) {
+  .acciones { flex-direction: column; align-items: stretch; }
+  .acciones > * { width: 100%; }
+}
+
+/* --- Estrellas y luna: capas seguras --- */
+#stars { opacity: .85; }
+.luna { z-index: 2; }
+body > *:not(canvas) { position: relative; z-index: 1; }
